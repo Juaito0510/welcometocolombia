@@ -1,43 +1,3 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -89,6 +49,10 @@
         .chart-container {
             margin-top: 2em;
         }
+        iframe {
+            max-width: 100%;
+            border-radius: 5px;
+        }
         footer {
             background-color: #003087;
             color: white;
@@ -108,6 +72,8 @@
         <a href="#home">Home</a>
         <a href="#about">About</a>
         <a href="#earth-processes">Earth Processes</a>
+        <a href="#maps">Maps</a>
+        <a href="#geology">Geology</a>
         <a href="#references">References</a>
     </nav>
     <div class="container">
@@ -144,40 +110,102 @@
             <h2>Maps of Colombia</h2>
             <p>These maps enhance our understanding of Colombia’s geography and history, reflecting its evolution over time.</p>
             <h3>1. Viceroyalty of New Granada (Colonial Period)</h3>
-            <img src="https://contextomedia.com/wp-content/uploads/nueva-granada-1-1.jpg" alt="Viceroyalty of New Granada">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/5b/Viceroyalty_of_New_Granada_1717-1739.jpg" alt="Viceroyalty of New Granada">
             <p>This map shows the Viceroyalty of New Granada under Spanish rule (1717-1810), including modern-day Colombia, Venezuela, Ecuador, and Panama. It highlights colonial administrative divisions.</p>
             <h3>2. Gran Colombia (1819-1830)</h3>
-            <img src="https://cdn.britannica.com/70/7670-050-79CABFED/division-Gran-Colombia.jpg" alt="Gran Colombia">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7f/Gran_Colombia_1824.png" alt="Gran Colombia">
             <p>Depicting Gran Colombia, this map illustrates the post-independence union of Colombia, Venezuela, Ecuador, and Panama, showcasing the early vision of a unified South America.</p>
             <h3>3. Colombia in 1891 (Pre-Panama Separation)</h3>
-            <img src="https://images.fineartamerica.com/images/artworkimages/mediumlarge/3/vintage-colombia-map-1890-adam-shaw.jpg" alt="Colombia 1891">
+            <img src="https://www.loc.gov/resource/g5200.ct002093/?r=-0.028,-0.029,1.083,0.431,0" alt="Colombia 1891">
             <p>This 1891 map shows Colombia before Panama’s secession in 1903, with Panama as a department, highlighting significant territorial changes.</p>
             <h3>4. Modern Map of Colombia</h3>
-            <img src="https://www.mapsofindia.com/world-map/colombia/colombia-departments-and-capital-map.jpg" alt="Modern Colombia">
+            <img src="https://www.worldatlas.com/r/w1200-q80/upload/3b/bf/7e/co-01.png" alt="Modern Colombia">
             <p>Using the Transverse Mercator projection, this map displays Colombia’s current boundaries and major geographical features, offering a contemporary view.</p>
-            <h3>5. South America in Colombia</h3>
-            <img src="https://www.beautifulworld.com/wp-content/uploads/2016/10/colombia-south-america-map.jpg" alt="South America Colombia">
+            <h3>5. South America with Colombia Highlighted</h3>
+            <img src="https://www.researchgate.net/profile/Juan-Carlos-Molano/publication/305996054/figure/fig1/AS:668468054048768@1536386723457/Map-of-South-America-showing-the-location-of-Colombia.png" alt="South America Colombia">
             <p>This map highlights Colombia’s position in northwestern South America, with the equator passing through its southern region, indicating its latitudinal range (12.45° N to 4.23° S).</p>
             <h3>Geographical and Historical Insights</h3>
             <ul>
                 <li><strong>Continental Location</strong>: Colombia is in northwestern South America, bordered by the Caribbean Sea, Venezuela, Brazil, Peru, Ecuador, Panama, and the Pacific Ocean.</li>
                 <li><strong>Latitudinal Range</strong>: From approximately 12.45° N to 4.23° S, crossing the equator.</li>
                 <li><strong>Historical Existence</strong>: Independent since 1819 as part of Gran Colombia, becoming the Republic of Colombia in 1886, with the current constitution adopted in 1991.</li>
-                <li><strong>Influential Cartographer</strong>: Agustín Codazzi (1793–1859), an Italian, led the Comisión Corográfica (1850-1859), producing Colombia’s first comprehensive maps. His portrait and maps are available at <a href="https://www.davidrumsey.com/luna/servlet/detail/RUMSEY~8~1~246156~5515024">David Rumsey</a> and <a href="https://commons.wikimedia.org/wiki/Category:Maps_by_Agustin_Codazzi">Wikimedia Commons</a>.</li>
+                <li><strong>Influential Cartographer</strong>: Agustín Codazzi (1793–1859), an Italian, led the Comisión Corográfica (1850-1859), producing Colombia’s first comprehensive maps. His portrait and maps are available at <a href="https://www.davidrumsey.com/luna/servlet/detail/RUMSEY~8~1~316~90001375:Biograf%C3%ADa-de-Agust%C3%ADn-Codazzi">David Rumsey</a> and <a href="https://commons.wikimedia.org/wiki/Category:Maps_by_Agustin_Codazzi">Wikimedia Commons</a>.</li>
             </ul>
-        </div>   
+        </div>
+        <!-- Geology and Natural Disasters Section -->
+        <div id="geology" class="section">
+            <h2>Geology and Natural Disasters</h2>
+            <p>Colombia’s dynamic geology, shaped by tectonic activity, mineral wealth, and volcanic landscapes, defines its natural environment and challenges.</p>
+            <h3>Tectonic Plates and Natural Disasters</h3>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/9/95/Tectonic_plates_%28South_America_west%29.png" alt="Tectonic Plates Colombia">
+            <p>Colombia lies on the South American Plate, near a convergent boundary where the Nazca Plate subducts beneath it along the Peru–Chile Trench, causing earthquakes, volcanic eruptions, and rare tsunamis. It also borders the Caribbean and North Andes plates, increasing seismic risk.</p>
+            <ul>
+                <li><strong>Earthquakes</strong>: The 1999 Armenia earthquake (M6.2) killed over 1,185, and the 2023 Bogotá earthquake (M6.3) caused minor damage.</li>
+                <li><strong>Volcanoes</strong>: The 1985 Nevado del Ruiz eruption triggered deadly lahars, killing over 23,000.</li>
+                <li><strong>Tsunamis</strong>: Events in 1906 and 1979 affected the Pacific coast, with the 1979 tsunami killing 36.</li>
+            </ul>
+            <h3>Rock and Mineral Resources</h3>
+            <p>Colombia’s mineral resources drive economic growth but pose environmental and social challenges.</p>
+            <ul>
+                <li><strong>Types</strong>: Coal (Cerrejón mine, La Guajira), petroleum (Llanos, Amazonia), gold (Antioquia, Chocó), emeralds (Boyacá), nickel, platinum, silver, copper.</li>
+                <li><strong>Economic Benefits</strong>: Mining employs thousands and supports exports. Coal ($9.224 billion in 2023) goes to Europe and Asia; petroleum to the US; gold and emeralds globally.</li>
+                <li><strong>Impacts</strong>: Mining causes deforestation, water pollution (e.g., mercury from gold mining), and social conflicts, with 69% of gold mined illegally in 2020.</li>
+            </ul>
+            <h3>Earthquakes</h3>
+            <p>Colombia’s seismic activity is significant due to its position on the Pacific Ring of Fire. Historical events include:</p>
+            <ul>
+                <li><strong>1906</strong>: M8.8 offshore earthquake caused a tsunami.</li>
+                <li><strong>1999 Armenia</strong>: M6.2, killed over 1,185, destroyed 60% of Armenia’s buildings.</li>
+                <li><strong>2023 Bogotá</strong>: M6.3, minor damage, one fatality.</li>
+            </ul>
+            <p>The government, via the Colombian Geological Service (SGC) and National Unit for Disaster Risk Management (UNGRD), monitors seismic activity, enforces seismic-resistant building codes (updated 2010), and conducts public preparedness campaigns.</p>
+            <h3>Mountain Ranges</h3>
+            <p>Colombia’s topography is dominated by the Andes and Sierra Nevada de Santa Marta.</p>
+            <ul>
+                <li><strong>Western Cordillera</strong>: Rugged, peaks like Nevado del Huila (5,365 m).</li>
+                <li><strong>Central Cordillera</strong>: Volcanic, includes Nevado del Ruiz (5,321 m).</li>
+                <li><strong>Eastern Cordillera</strong>: High plateaus, Ritacuba Blanco (5,410 m).</li>
+                <li><strong>Sierra Nevada de Santa Marta</strong>: Coastal, Pico Cristóbal Colón (5,775 m).</li>
+            </ul>
+            <p>These ranges create diverse climates, supply rivers like the Magdalena, and shape cultural identities. Historically, they isolated regions, influencing trade and providing protection.</p>
+            <h3>Volcanoes</h3>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/Nevado_del_Ruiz_volcano.jpg" alt="Nevado del Ruiz">
+            <p>Colombia’s stratovolcanoes, part of the Andean Volcanic Belt, include:</p>
+            <ul>
+                <li><strong>Nevado del Ruiz</strong>: 5,321 m, 1985 eruption killed over 23,000 in Armero.</li>
+                <li><strong>Galeras</strong>: 4,276 m, 1993 eruption killed nine.</li>
+                <li><strong>Puracé</strong>: 4,650 m, active.</li>
+                <li><strong>Nevado del Huila</strong>: 5,365 m, highest volcano.</li>
+                <li><strong>Nevado del Tolima</strong>: 5,215 m, Los Nevados National Park.</li>
+            </ul>
+            <p>Volcanoes enrich soil for agriculture, attract tourists, but pose risks from lahars and ash fall.</p>
+            <h3>Watch a Documentary on Nevado del Ruiz</h3>
+            <iframe width="600" height="400" src="https://www.youtube.com/embed/0dC-kLqN7oM" frameborder="0" allowfullscreen></iframe>
+            <h3>Chart: Historical Earthquake Magnitudes</h3>
+            <div class="chart-container">
+                <canvas id="earthquakeChart"></canvas>
+            </div>
+        </div>
         <!-- References Section -->
         <div id="references" class="section">
             <h2>References</h2>
             <ul>
                 <li>Bushnell, D. (1993). <i>The Making of Modern Colombia: A Nation in Spite of Itself</i>. University of California Press.</li>
-                <li>Central Intelligence Agency. (2023). Colombia. In <i>The World Factbook</i>. <a href="https://www.cia.gov/the-world-factbook/countries/colombia/">CIA World Factbook</a>.</li>
+                <li>Central Intelligence Agency. (2023). Colombia. In <i>The World Factbook</i>. <a href="https://www.cia.gov/the-world-factbook/countries/colombia/">https://www.cia.gov/the-world-factbook/countries/colombia/</a></li>
+                <li>Colombian Geological Service. (2023). Seismic monitoring in Colombia. <a href="https://www.idiger.gov.co/rsismico">https://www.idiger.gov.co/rsismico</a></li>
                 <li>McGreevey, W. (2021). Colombia’s economic growth. <i>Journal of Latin American Studies</i>, 53(2), 245-270.</li>
-                <li>Wikipedia. (2023). Geography of Colombia. <a href="https://en.wikipedia.org/wiki/Geography_of_Colombia">Wikipedia</a>.</li>
-                <li>World Atlas. (2023). Colombia Maps & Facts. <a href="https://www.worldatlas.com/maps/colombia">World Atlas</a>.</li>
-                <li>Library of Congress. (1891). Map of the Republic of Colombia. <a href="https://www.loc.gov/item/2021668482/">Library of Congress</a>.</li>
-                <li>Rumsey, D. (1881). Biografía de Agustín Codazzi. <a href="https://www.davidrumsey.com/luna/servlet/detail/RUMSEY~8~1~246156~5515024">David Rumsey</a>.</li>
-                <li>Wikimedia Commons. (2023). Maps by Agustin Codazzi. <a href="https://commons.wikimedia.org/wiki/Category:Maps_by_Agustin_Codazzi">Wikimedia Commons</a>.</li>
+                <li>Pacific Disaster Center. (2023). Colombia’s data-driven approach to safer, resilient communities. <a href="https://www.pdc.org/colombias-data-driven-approach-to-safer-resilient-communities/">https://www.pdc.org/colombias-data-driven-approach-to-safer-resilient-communities/</a></li>
+                <li>Statista. (2023). Colombia: Value of coal exports by region. <a href="https://www.statista.com/statistics/807062/colombia-value-coal-exports-region/">https://www.statista.com/statistics/807062/colombia-value-coal-exports-region/</a></li>
+                <li>Wikipedia. (2023). Geography of Colombia. <a href="https://en.wikipedia.org/wiki/Geography_of_Colombia">https://en.wikipedia.org/wiki/Geography_of_Colombia</a></li>
+                <li>Wikipedia. (2023). List of earthquakes in Colombia. <a href="https://en.wikipedia.org/wiki/List_of_earthquakes_in_Colombia">https://en.wikipedia.org/wiki/List_of_earthquakes_in_Colombia</a></li>
+                <li>Wikipedia. (2023). List of volcanoes in Colombia. <a href="https://en.wikipedia.org/wiki/List_of_volcanoes_in_Colombia">https://en.wikipedia.org/wiki/List_of_volcanoes_in_Colombia</a></li>
+                <li>Wikipedia. (2023). Mineral industry of Colombia. <a href="https://en.wikipedia.org/wiki/Mineral_industry_of_Colombia">https://en.wikipedia.org/wiki/Mineral_industry_of_Colombia</a></li>
+                <li>World Atlas. (2023). Colombia Maps & Facts. <a href="https://www.worldatlas.com/maps/colombia">https://www.worldatlas.com/maps/colombia</a></li>
+                <li>World Economic Forum. (2015). How Colombia is preparing for its next earthquake. <a href="https://www.weforum.org/stories/2015/10/how-colombia-is-preparing-for-its-next-earthquake/">https://www.weforum.org/stories/2015/10/how-colombia-is-preparing-for-its-next-earthquake/</a></li>
+                <li>Library of Congress. (1891). Map of the Republic of Colombia. <a href="https://www.loc.gov/item/2021668482/">https://www.loc.gov/item/2021668482/</a></li>
+                <li>Rumsey, D. (1881). Biografía de Agustín Codazzi. <a href="https://www.davidrumsey.com/luna/servlet/detail/RUMSEY~8~1~316~90001375:Biograf%C3%ADa-de-Agust%C3%ADn-Codazzi">https://www.davidrumsey.com/luna/servlet/detail/RUMSEY~8~1~316~90001375:Biograf%C3%ADa-de-Agust%C3%ADn-Codazzi</a></li>
+                <li>Wikimedia Commons. (2023). Maps by Agustin Codazzi. <a href="https://commons.wikimedia.org/wiki/Category:Maps_by_Agustin_Codazzi">https://commons.wikimedia.org/wiki/Category:Maps_by_Agustin_Codazzi</a></li>
+            </ul>
         </div>
     </div>
     <footer>
@@ -186,8 +214,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         // Chart.js for Coffee Production
-        const ctx = document.getElementById('coffeeChart').getContext('2d');
-        const coffeeChart = new Chart(ctx, {
+        const coffeeCtx = document.getElementById('coffeeChart').getContext('2d');
+        const coffeeChart = new Chart(coffeeCtx, {
             type: 'bar',
             data: {
                 labels: ['2018', '2019', '2020', '2021', '2022'],
@@ -207,6 +235,34 @@
                         title: {
                             display: true,
                             text: 'Production (thousand bags)'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Chart.js for Earthquake Magnitudes
+        const quakeCtx = document.getElementById('earthquakeChart').getContext('2d');
+        const earthquakeChart = new Chart(quakeCtx, {
+            type: 'bar',
+            data: {
+                labels: ['1906', '1999 Armenia', '2023 Bogotá'],
+                datasets: [{
+                    label: 'Earthquake Magnitude',
+                    data: [8.8, 6.2, 6.3],
+                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Magnitude'
                         }
                     }
                 }
